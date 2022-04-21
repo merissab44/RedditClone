@@ -23,6 +23,9 @@ app.get('/', (req, res) => {
 app.get('/posts/new', (req, res) => {
     res.render('posts-new');
 })
+// app.get('/posts/index', (req, res) => {
+//     res.render('posts-index');
+// })
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
