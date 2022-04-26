@@ -1,42 +1,49 @@
 const Post = require('../models/post');
+const User = require('../models/user');
 const Comment = require('../models/comment');
 
-const express = require('express')
-const router = express.Router({mergeParams: true})
-const requireLogin = require('../middleware/requireLogin');
-
-router.get('/replies/new', requireLogin, async (req, res) => {
-    try {
+module.exports = (app) => {
+    // NEW REPLY
+    app.get('/posts/:postId/comments/:commentId/replies/new', (req, res) => {
         const currentUser = req.user;
-        const post = await Post.findById(req.params.postId).lean();
-        const comment = await Comment.findById(req.params.commentId).lean();
+        let post;
+        Post.findById(req.params.postId).lean()
+            .then((p) => {
+                post = p;
+                return Comment.findById(req.params.commentId).lean();
+            })
+            .then((comment) => {
+                res.render('replies-new', { post, comment, currentUser });
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    });
 
-        if (!post || !comment)
-            return res.redirect("/");
-
-        res.render('replies-new.handlebars', {post, comment, currentUser});
-    } catch (err) {
-        console.error(err);
-    }
-});
-
-router.post('/replies', requireLogin, async (req, res) => {
-    try {
-        const reply = await new Comment(req.body);
+    // CREATE REPLY
+    app.post('/posts/:postId/comments/:commentId/replies', (req, res) => {
+        // TURN REPLY INTO A COMMENT OBJECT
+        const reply = new Comment(req.body);
         reply.author = req.user._id;
-        await reply.save();
-
-        const post = await Post.findById(req.params.postId)
-        const comment = await Comment.findById(req.params.commentId);
-        comment.comments.unshift(reply._id);
-        await comment.save();
-
-        res.redirect(`/posts/${req.params.postId}`)
-        return post.save();
-    } catch (err) {
-        console.error(err);
-    }
-})
-
-
-module.exports = router
+        // LOOKUP THE PARENT POST
+        Post.findById(req.params.postId)
+            .then((post) => {
+                // FIND THE CHILD COMMENT
+                Promise.all([
+                    reply.save(),
+                    Comment.findById(req.params.commentId),
+                ])
+                    .then(([reply, comment]) => {
+                        // ADD THE REPLY
+                        comment.comments.unshift(reply._id);
+                        return Promise.all([
+                            comment.save(),
+                        ]);
+                    })
+                    .then(() => res.redirect(`/posts/${req.params.postId}`))
+                    .catch(console.error);
+                // SAVE THE CHANGE TO THE PARENT DOCUMENT
+                return post.save();
+            });
+    });
+};

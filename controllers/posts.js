@@ -63,28 +63,28 @@ module.exports = (app) => {
             });
     });
 
-    // app.put('/posts/:id/vote-up', (req, res) => {
-    //     Post.findById(req.params.id).then(post => {
-    //         post.upVotes.push(req.user._id);
-    //         post.voteScore += 1;
-    //         post.save();
+    app.put('/posts/:id/vote-up', (req, res) => {
+        Post.findById(req.params.id).then(post => {
+            post.upVotes.push(req.user._id);
+            post.voteScore += 1;
+            post.save();
 
-    //         return res.status(200);
-    //     }).catch(err => {
-    //         console.log(err);
-    //     })
-    // });
+            return res.status(200);
+        }).catch(err => {
+            console.log(err);
+        })
+    });
 
-    // app.put('/posts/:id/vote-down', (req, res) => {
-    //     Post.findById(req.params.id).then(post => {
-    //         post.downVotes.push(req.user._id);
-    //         post.voteScore -= 1;
-    //         post.save();
+    app.put('/posts/:id/vote-down', (req, res) => {
+        Post.findById(req.params.id).then(post => {
+            post.downVotes.push(req.user._id);
+            post.voteScore -= 1;
+            post.save();
 
-    //         return res.status(200);
-    //     }).catch(err => {
-    //         console.log(err);
-    //     });
-    // });
+            return res.status(200);
+        }).catch(err => {
+            console.log(err);
+        });
+    });
 
 };
