@@ -17,7 +17,7 @@ app.use(express.static('public'));
 require('./controllers/posts')(app);
 require('./controllers/comments.js')(app);
 require('./data/reddit-db');
-// require('./controllers/auth.js')(app);
+require('./controllers/auth.js')(app);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
