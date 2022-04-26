@@ -13,7 +13,7 @@ describe('site', function () {
   it('Should have home page', function (done) {
     // Describe what should happen
     // In this case we test that the home page loads
-    chai
+    agent
       .get('/')
       .end(function (err, res) {
         if (err) {

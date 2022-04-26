@@ -15,17 +15,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
 require('./controllers/posts')(app);
-// require('./data/reddit-db');
-
-app.get('/', (req, res) => {
-    res.render('home');
-})
-app.get('/posts/new', (req, res) => {
-    res.render('posts-new');
-})
-// app.get('/posts/index', (req, res) => {
-//     res.render('posts-index');
-// })
+require('./data/reddit-db');
+// require('./controllers/auth.js')(app);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

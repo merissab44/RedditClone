@@ -1,6 +1,10 @@
 const Post = require('../models/post');
 
 module.exports = (app) => {
+
+   app.get('/posts/new', (req, res) => {
+        res.render('posts-new');
+    });
   // CREATE
   app.post('/posts/new', (req, res) => {
     // INSTANTIATE INSTANCE OF POST MODEL
@@ -25,6 +29,11 @@ module.exports = (app) => {
       .catch((err) => {
         console.log(err.message);
       });
+  });
+
+  // SUBREDDIT
+  app.get('/n/:subreddit', (req, res) => {
+    console.log(req.params.subreddit);
   });
 
 };
