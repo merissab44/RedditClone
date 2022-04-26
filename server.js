@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
 require('./controllers/posts')(app);
+require('./controllers/comments.js')(app);
 require('./data/reddit-db');
 // require('./controllers/auth.js')(app);
 
