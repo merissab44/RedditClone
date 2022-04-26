@@ -1,18 +1,19 @@
 // test/index.js
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const { describe, it } = require('mocha');
-const app = require('../server');
-const agent = chai.request.agent(app);
-
 const should = chai.should();
+const { describe, it } = require('mocha');
+const app = require('./../server');
+// const agent = chai.request.agent(app);
 
 chai.use(chaiHttp);
 
 describe('site', function () {
   // Describe what you are testing
   it('Should have home page', function (done) {
-    agent
+    // Describe what should happen
+    // In this case we test that the home page loads
+    chai
       .get('/')
       .end(function (err, res) {
         if (err) {
