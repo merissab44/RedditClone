@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const Populate = require('../util/autopopulate');
 
 const postSchema = new Schema({
   title: { type: String, required: true },
@@ -9,13 +8,8 @@ const postSchema = new Schema({
   upVotes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   downVotes: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   voteScore: { type: Number },
-  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  subreddit: { type: String, required: true }
+  author: { type: Schema.Types.ObjectId, ref: 'User', required: false },
+  subreddit: { type: String, required: false }
 });
-
-// Always populate the author field
-postSchema
-  .pre('findOne', Populate('author'))
-  .pre('find', Populate('author'));
 
 module.exports = model('Post', postSchema);

@@ -2,12 +2,14 @@ require('dotenv').config();
 const express = require('express')
 const cookieParser = require('cookie-parser');
 const checkAuth = require('./middleware/checkAuth');
-const app = express()
+const app = express();
+const expressValidator = require('express-validator');
 
 const {engine} = require('express-handlebars');
 
 app.use(cookieParser());
 app.use(checkAuth);
+app.use(express.static('public'));
 app.engine('handlebars', engine({
     defaultLayout: 'main',
     helpers: {

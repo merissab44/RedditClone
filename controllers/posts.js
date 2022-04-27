@@ -24,9 +24,9 @@ module.exports = (app) => {
             const userId = req.user._id;
             const post = new Post(req.body);
             post.author = userId;
-            // post.upVotes = [];
-            // post.downVotes = [];
-            // post.voteScore = 0;
+            post.upVotes = [];
+            post.downVotes = [];
+            post.voteScore = 0;
             post
                 .save()
                 .then(() => User.findById(userId))
@@ -40,20 +40,20 @@ module.exports = (app) => {
                     console.log(err.message);
                 });
         } else {
-            return res.status(401); // UNAUTHORIZED
+            return res.status(401); // FOR UNAUTHORIZED USERS
         }
     });
 
-    // SHOW
+    // LOOK UP POST
     app.get('/posts/:id', (req, res) => {
         const currentUser = req.user;
-        Post.findById(req.params.id).populate('comments').lean()
+        Post.findById(req.params.id).lean().populate('comments')
             .then((post) => res.render('posts-show', { post, currentUser }))
             .catch((err) => {
                 console.log(err.message);
             });
     });
-    // SUBREDDIT
+
     app.get('/n/:subreddit', (req, res) => {
         const { user } = req;
         Post.find({ subreddit: req.params.subreddit }).lean()

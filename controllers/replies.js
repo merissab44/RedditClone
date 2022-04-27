@@ -3,7 +3,6 @@ const User = require('../models/user');
 const Comment = require('../models/comment');
 
 module.exports = (app) => {
-    // NEW REPLY
     app.get('/posts/:postId/comments/:commentId/replies/new', (req, res) => {
         const currentUser = req.user;
         let post;
